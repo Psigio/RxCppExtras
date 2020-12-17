@@ -8,7 +8,7 @@ include(FetchContent)
 FetchContent_Declare(
         rxcpp
         GIT_REPOSITORY  https://github.com/ReactiveX/RxCpp
-        GIT_TAG         v4.1.0
+        GIT_TAG         HEAD
 )
 
 FetchContent_GetProperties(rxcpp)
