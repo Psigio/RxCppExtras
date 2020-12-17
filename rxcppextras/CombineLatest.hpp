@@ -3,7 +3,7 @@
 #include <tuple>
 #include "rxcpp/rx.hpp"
 
-namespace rxcppextras
+namespace rxcppextras_internal
 {
     template <typename T>
     class CombineLatestAccumulator
@@ -17,12 +17,14 @@ namespace rxcppextras
             valueSeen = std::vector<bool>(size);
         }
     };
-
+} // namespace rxcppextras_internal
+namespace rxcppextras
+{
     template <typename T>
     rxcpp::observable<std::vector<T>> combine_latest(std::vector<rxcpp::observable<T>> inputs)
     {
         auto inputSize = inputs.size();
-        CombineLatestAccumulator<T> accumulator(inputSize);
+        rxcppextras_internal::CombineLatestAccumulator<T> accumulator(inputSize);
         // Merge operating on vector and providing a projection to include index
         return rxcpp::observable<>::create<std::tuple<int, T>>(
                    [inputs, inputSize](rxcpp::subscriber<std::tuple<int, T>> obs) {
@@ -44,7 +46,7 @@ namespace rxcppextras
                    })
             // Accumulate to get latest values and indication that propagation has happened
             .scan(accumulator,
-                  [](CombineLatestAccumulator<T> acc, std::tuple<int, T> curr) -> CombineLatestAccumulator<T> {
+                  [](rxcppextras_internal::CombineLatestAccumulator<T> acc, std::tuple<int, T> curr) -> CombineLatestAccumulator<T> {
                       auto currentIndex = std::get<0>(curr);
                       auto currentValue = std::get<1>(curr);
                       // Update state vector
@@ -53,7 +55,7 @@ namespace rxcppextras
                       acc.valueSeen[currentIndex] = true;
                       return acc;
                   })
-            .filter([](CombineLatestAccumulator<T> x) -> bool {
+            .filter([](rxcppextras_internal::CombineLatestAccumulator<T> x) -> bool {
                 // Only propagate if all Values seen
                 auto count = 0;
                 for (auto i : x.valueSeen)
@@ -65,7 +67,7 @@ namespace rxcppextras
                 }
                 return count == x.valueSeen.size();
             })
-            .map([](CombineLatestAccumulator<T> x) -> std::vector<T> {
+            .map([](rxcppextras_internal::CombineLatestAccumulator<T> x) -> std::vector<T> {
                 return x.latestValues;
             });
     }
