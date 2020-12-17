@@ -39,3 +39,4 @@ CMakeCache*
 Makefile*
 build/*
 _deps/*
+compile_commands.json

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <tuple>
-#include "rx.hpp"
+#include "rxcpp/rx.hpp"
 
 template <typename T>
 class CombineLatestAccumulator
