@@ -70,8 +70,8 @@ namespace rxcppextras
             });
     }
     template <typename T, typename TOutput>
-    rxcpp::observable<std::vector<T>> combine_latest(std::vector<rxcpp::observable<T>> inputs,
-                                                     std::function<TOutput(std::vector<T>)> projectionFunction)
+    rxcpp::observable<TOutput> combine_latest(std::vector<rxcpp::observable<T>> inputs,
+                                              std::function<TOutput(std::vector<T>)> projectionFunction)
     {
         return rxcppextras::combine_latest<T>(inputs)
             .map([projectionFunction](std::vector<T> latest) -> TOutput {
