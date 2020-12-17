@@ -3,8 +3,11 @@ project(RxCppExtras VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_library(RxCppExtras INTERFACE)
-target_include_directories(RxCppExtras INTERFACE rxcppextras)
+include(GNUInstallDirs)
+
+add_library(${PROJECT_NAME} INTERFACE)
+
+target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_11)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -21,5 +24,6 @@ endif()
 
 target_include_directories(
     ${PROJECT_NAME}
-    INTERFACE ${rxcpp_SOURCE_DIR}/Rx/v2/src/   
-)
+    INTERFACE $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/rxcppextras>
+            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    INTERFACE ${rxcpp_SOURCE_DIR}/Rx/v2/src/)
