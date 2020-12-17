@@ -46,7 +46,8 @@ namespace rxcppextras
                    })
             // Accumulate to get latest values and indication that propagation has happened
             .scan(accumulator,
-                  [](rxcppextras_internal::CombineLatestAccumulator<T> acc, std::tuple<int, T> curr) -> CombineLatestAccumulator<T> {
+                  [](rxcppextras_internal::CombineLatestAccumulator<T> acc, std::tuple<int, T> curr)
+                      -> rxcppextras_internal::CombineLatestAccumulator<T> {
                       auto currentIndex = std::get<0>(curr);
                       auto currentValue = std::get<1>(curr);
                       // Update state vector
